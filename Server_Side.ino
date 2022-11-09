@@ -1,4 +1,3 @@
-
 //If you use Dragino IoT Mesh Firmware, uncomment below lines.
 //For product: LG01. 
 #define BAUDRATE 115200
@@ -52,10 +51,15 @@ void loop()
       //Console.println(rf95.lastRssi(), DEC);
       
       // Send a reply
-      uint8_t data[] = "received";
-      rf95.send(data, sizeof(data));
+      //uint8_t data[] = "received";
+      //rf95.send(data, sizeof(data));
+      //rf95.waitPacketSent();
+      //Console.println("Sent a reply");
+
+      //forward data to more than one element
+      rf95.send(buf, sizeof(buf));
       rf95.waitPacketSent();
-      Console.println("Sent a reply");
+      Console.println("forwarded data!");
     }
     else
     {
