@@ -49,7 +49,7 @@ void loop()
     // Should be a reply message for us now   
       if (rf95.recv(buf, &len))
       {
-        Serial.println("got reply: ");
+        //Serial.println("got reply: ");
         uint8_t reply = buf;
         //if(((char*)reply) == "Recieved"){
           //Serial.write((char*)reply);

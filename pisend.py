@@ -29,11 +29,12 @@ if os.path.exists('sampledata.csv'):
             recv_from_cube = ser.readline()
             string_data = str(recv_from_cube)
             print(string_data)
-            if(string_data == "b'got reply: received\r\n'"):
-                print("recieved")
-            else:
-                with open('from_other_satellites.csv', 'w') as file:
-                    file.write(str(recv_from_cube))
-                    print("line written")
+            #if(string_data == "b'got reply: received\r\n'"):
+                #print("recieved")
+            #else:
+            with open('from_other_satellites.csv', 'a') as file:
+                file.write(str(recv_from_cube))
+                file.write("\n")
+                print("line written")
             time.sleep(1)
             #ser.flush()
