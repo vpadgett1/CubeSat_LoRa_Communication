@@ -15,23 +15,24 @@ time.sleep(5)
 # print(f'socket bound to {host}:{port}')
 # WiFi.listen(5)
 
+#while True:
 if os.path.exists('sampledata.csv'):
-    #print("path exists")
+#print("path exists")
     with open('sampledata.csv', 'r') as f:
         lines = f.readlines()
         for line in lines:
             arr = bytes(line, 'utf-8')
-            #print(arr)
+        #print(arr)
             ser.write(arr)
-            #print(ser.readline())
-            #print("written")
+        #print(ser.readline())
+        #print("written")
             time.sleep(1)
             recv_from_cube = ser.readline()
             string_data = str(recv_from_cube)
             print(string_data)
-            #if(string_data == "b'got reply: received\r\n'"):
-                #print("recieved")
-            #else:
+        #if(string_data == "b'got reply: received\r\n'"):
+            #print("recieved")
+        #else:
             with open('from_other_satellites.csv', 'a') as file:
                 file.write(str(recv_from_cube))
                 file.write("\n")
