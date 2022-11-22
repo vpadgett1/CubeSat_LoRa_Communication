@@ -40,11 +40,11 @@ void loop()
   if (rf95.available())
   {
     // Should be a message for us now   
-    uint8_t buf[RH_RF95_MAX_MESSAGE_LEN];
+    uint8_t buf[100];
     uint8_t len = sizeof(buf);
     if (rf95.recv(buf, &len))
     {
-      RH_RF95::printBuffer("request: ", buf, len);
+      //RH_RF95::printBuffer("request: ", buf, len);
       Console.print("got request: ");
       Console.println((char*)buf);
       //Console.print("RSSI: ");
@@ -59,7 +59,7 @@ void loop()
       //forward data to more than one element
       rf95.send(buf, sizeof(buf));
       rf95.waitPacketSent();
-      Console.println("forwarded data!");
+      //Console.println("forwarded data!");
     }
     else
     {
