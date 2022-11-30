@@ -3,26 +3,24 @@ import socket
 import os
 import time
 
+ser = serial.Serial(port='/dev/ttyUSB0', baudrate=115200, timeout=.1)
+#time.sleep(2)
+previous = ''
 while True:
-    try:
-        ser = serial.Serial(port='/dev/ttyUSB0', baudrate=115200, timeout=.1)
-        if ser.is_open:
-            while True:
-                size = ser.inWaiting()
-                if size:
-                    data = ser.read(size)
-                    res = data.decode("utf-8")
-                    print(res)
-                    with open('from_other_satellites.csv', 'a') as file:
-                    file.write(str(res))
-                    file.write("\n")
-                    print("line written")
-                else:
-                    print("Data not reading")
-                time.sleep(1)
-        else:
-            ser.close()
-            print("ser is no open or data complete")
-    except serial.SerialException:
-        print("USB0 Not Open")
-        time.sleep(1)
+    while ser.in_waiting:
+        recv_from_cube = ser.readline()
+        string_data = str(recv_from_cube)
+        with open('final_receving.csv', 'a') as file:
+            #if b'recv failed' in recv_from_cube:
+                #continue
+            string_clean= string_data.split('e\\', 1)
+            #print(string_clean[0])
+            if previous==string_clean[0]:
+                continue
+            clean = string_clean[0].split('b\'',1)
+            print(clean)
+            file.write(clean[1])
+            file.write("\n")
+            previous = string_clean[0]
+            #print("line written")
+        ser.flush()
