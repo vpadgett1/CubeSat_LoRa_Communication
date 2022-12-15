@@ -1,17 +1,18 @@
 #include <SPI.h>
 #include <RH_RF95.h>
+#include <Console.h>
 
 // Singleton instance of the radio driver
 RH_RF95 rf95;
-float frequency = 868.0;
-const int BUFFER_SIZE = 100;
+float frequency = 915.0;
+const int BUFFER_SIZE =100;
 uint8_t buf[BUFFER_SIZE];
 
 void setup() 
 {
   Serial.begin(115200);
   //while (!Serial) ; // Wait for serial port to be available
-  Serial.println("Start LoRa Client");
+  //Serial.println("Start LoRa Client");
   if (!rf95.init())
     Serial.println("init failed");
   // Setup ISM frequency
@@ -36,38 +37,16 @@ void loop()
   // Send a message to LoRa Server
   //uint8_t data[] = "Hello, this is device 1";
   //rf95.send(data, sizeof(data));
-  uint8_t buf[RH_RF95_MAX_MESSAGE_LEN];
+  uint8_t buf[BUFFER_SIZE];
   uint8_t len = sizeof(buf);
   while(Serial.available()){ 
-    Serial.readBytesUntil('\n',buf,BUFFER_SIZE);
+    Serial.readBytesUntil('\0',buf,sizeof(buf));
+    Serial.println((char*)buf);
     rf95.send(buf, sizeof(buf)); //Send buf
     rf95.waitPacketSent();
     // Now wait for a reply
     rf95.waitAvailableTimeout(3000);
-    if (rf95.waitAvailableTimeout(3000)){ 
-    // Should be a reply message for us now   
-      if (rf95.recv(buf, &len))
-      {
-        Serial.println("got reply: ");
-        uint8_t reply = buf;
-        if(((char*)reply) == "Recieved"){
-          Serial.write((char*)reply);
-        }
-        else{
-        Serial.println((char*)buf);
-        }
-      Serial.print("RSSI: ");
-      Serial.println(rf95.lastRssi(), DEC);    
-      }
-      else
-      {
-        Serial.println("recv failed");
-      }
-    }
-    //else
-    //{
-     // Serial.println("No reply, is LoRa server running?");
-    //}
+  
   }
   if (rf95.recv(buf, &len))
       {
@@ -78,12 +57,12 @@ void loop()
         //}
         //else{
         Serial.println((char*)buf);
+        memset(buf, 0, sizeof(buf));
         //}
       //Serial.print("RSSI: ");
-      //Serial.println(rf95.lastRssi(), DEC);    
       }
-      else
-      {
-        Serial.println("recv failed");
-      }
+  else
+  {
+    //Serial.println("recv failed");
+  }
 }

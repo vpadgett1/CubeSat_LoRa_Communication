@@ -13,18 +13,18 @@ while True:
         with open('final_receving.csv', 'a') as file:
             #if b'recv failed' in recv_from_cube:
                 #continue
-            string_clean= string_data.split('e\\', 1)
-            string_cleaner=string_data.split('2\\xcc', 1)
+            #string_clean= string_data.split('e\\', 1)
+            #string_cleaner=string_data.split('2\\xcc', 1)
             #print(string_clean[0])
-            if previous==string_clean[0]:
+            string_clean = string_data.split('b\'', 1)[1]
+            if string_clean.startswith("v"):
                 continue
-            clean = string_clean[0].split('b\'',1)
-            cleaner = string_cleaner[0].split('b\'',1)
-            print(clean)
-            #file.write(clean[1])
-            #file.write("\n")
-            file.write(cleaner[1])
-            file.write("\n")
-            previous = string_clean[0]
-            #print("line written")
+            string_clean = string_clean.split('\\n',1)[0]
+            print(string_clean)
+            
+            if previous==string_clean:
+                continue
+            file.write(string_clean)
+            file.write('\n')
+            previous=string_clean
         ser.flush()
