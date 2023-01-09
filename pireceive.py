@@ -10,7 +10,7 @@ while True:
     while ser.in_waiting:
         recv_from_cube = ser.readline()
         string_data = str(recv_from_cube)
-        with open('final_receving.csv', 'a') as file:
+        with open('data_Jan_2023.csv', 'a') as file:
             #if b'recv failed' in recv_from_cube:
                 #continue
             #string_clean= string_data.split('e\\', 1)
@@ -19,12 +19,18 @@ while True:
             string_clean = string_data.split('b\'', 1)[1]
             if string_clean.startswith("v"):
                 continue
+            if string_clean.startswith("\\x"):
+                continue
+            if string_clean.startswith("H"):
+                continue
+            if string_clean.startswith("X"):
+                continue
             string_clean = string_clean.split('\\n',1)[0]
-            print(string_clean)
-            
+            #print(string_clean)
             if previous==string_clean:
                 continue
             file.write(string_clean)
             file.write('\n')
             previous=string_clean
+            print(string_clean)
         ser.flush()
