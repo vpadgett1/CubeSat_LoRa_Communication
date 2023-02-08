@@ -10,12 +10,15 @@ while True:
     while ser.in_waiting:
         recv_from_cube = ser.readline()
         string_data = str(recv_from_cube)
-        with open('data_Jan_2023.csv', 'a') as file:
+        #print(string_data)
+        with open('/home/cubesat/Documents/CubeSat_LoRa_Communication-main/data_Jan_2023.csv', 'a') as file:
             #if b'recv failed' in recv_from_cube:
                 #continue
             #string_clean= string_data.split('e\\', 1)
             #string_cleaner=string_data.split('2\\xcc', 1)
             #print(string_clean[0])
+            #string_clean = recv_from_cube.decode('ascii')
+            #print(string_clean)
             string_clean = string_data.split('b\'', 1)[1]
             if string_clean.startswith("v"):
                 continue
@@ -25,10 +28,17 @@ while True:
                 continue
             if string_clean.startswith("X"):
                 continue
+            if string_clean.startswith("\\r"):
+                continue
+            #if "d\r" in string_clean:
+                #string_clean.replace("d\r", "")
+            if "d\\r" in string_clean:
+                string_clean.replace("d\\r", "")
             string_clean = string_clean.split('\\n',1)[0]
             #print(string_clean)
-            if previous==string_clean:
+            if previous==string_clean or string_clean.isspace():
                 continue
+            #print("after cleaning:" + string_clean)
             file.write(string_clean)
             file.write('\n')
             previous=string_clean
